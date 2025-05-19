@@ -11,8 +11,11 @@ available_actions = {
 }
 
 
-prompt = """
-what is digital marketing?"""
+# city = 'San Francisco'
+city = 'Toronto'
+# prompt = """what is digital marketing?"""
+# prompt = f"""Should I taken an umbrella with me today in {city}?"""
+prompt = f'''What is the weather in {city}? Can I wear just shorts and a t-shirt?'''
 
 messages = [
     {"role": "system", "content": react_system_prompt},

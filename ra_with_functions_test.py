@@ -10,26 +10,26 @@ available_actions = {
     "get_weather": get_weather
 }
 
+city_list = ['San Francisco', 'Paris', 'London', 'New York', 'Toronto', 'Seattle']
 
-prompt = """
-Should I take an umbrella when going out today in London?"""
+for city in city_list:
+    prompt = f"""Should I take an umbrella when going out today in {city}?"""
+    response = generate_text_basic(prompt, model="gpt-4", system_prompt=react_system_prompt)
+    print(f'City: {city}, Response: {response}')
+    # we want to instruct the model to call the action or the function
+    json_function = extract_json(response)
+    print(f'extracted json functions {json_function}')
 
-response = generate_text_basic(prompt, model="gpt-4",system_prompt = react_system_prompt)
-
-print(f"Response from the model: {response}")
-#we want to instruct the model to call the action or the function
-json_function = extract_json(response)
-
-print(f"Extracted Json Functions{json_function}")
-
-if json_function:
-    function_name = json_function[0]['function_name']
-    function_parms = json_function[0]['function_parms']
-    if function_name not in available_actions:
-        raise Exception(f"Unknown action: {function_name}: {function_parms}")
-    print(f" -- running {function_name} {function_parms}")
-    action_function = available_actions[function_name]
-    #call the function
-    result = action_function(**function_parms)
-    function_result_message = f"Action_Response: {result}"
-    print(function_result_message)
+    if json_function:
+        function_name = json_function['function_name']
+        function_parms = json_function['function_parms']
+        if function_name not in available_actions:
+            print(f"Unknown action: {function_name}: {function_parms}")
+        print(f'-- running function {function_name} with params {function_parms}')
+        action_function = available_actions[function_name]
+        # call the function
+        result = action_function(**function_parms)
+        function_result_message = f'Action result: {result}'
+        print(function_result_message)
+        print('---')
+    print('----------------------')
